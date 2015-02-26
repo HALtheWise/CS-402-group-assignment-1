@@ -1,0 +1,11 @@
+fileFormatVersion: 2
+guid: 8972e9d9d8d559842b3090f72f180ff5
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences:
+  - matLitUp: {fileID: 10301, guid: 0000000000000000f000000000000000, type: 0}
+  - matClicked: {fileID: 2100000, guid: 49af905058a0b244798357a5ba4d5278, type: 2}
+  - matIdle: {fileID: 2100000, guid: 0e23c3f570bf1b4458a34f6c6712d280, type: 2}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
