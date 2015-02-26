@@ -8,6 +8,8 @@ class Character extends System.Object
 	var pos: 		Vector3;
 	var prefab: 	GameObject;
 	var dir:		Dir;
+	@HideInInspector
+	var isMoving:boolean = false;
 
 	function Character(pos: Vector3, prefab:GameObject){
 		this.pos =  pos;
@@ -16,9 +18,50 @@ class Character extends System.Object
 	
 	}
 
-	function move( dir: Dir, grid: Grid )
+	function motionTarget( dir: Dir, grid:Grid):Vector3{
+		var desiredPos:Vector3 = Vector3(pos.x, pos.y, pos.z);
+		switch (dir){
+			case Dir.UP:
+				desiredPos += Vector3.forward;
+				break;
+			case dir.DOWN:
+				desiredPos += Vector3.back;
+				break;
+			case dir.LEFT:
+				desiredPos += Vector3.left;
+				break;
+			default:
+				desiredPos += Vector3.right;				
+			}
+		
+		if (!grid.hasBox(desiredPos)){
+			return desiredPos;
+		}
+		
+		if (grid.hasBox(desiredPos) && !grid.hasBox(pos + Vector3.up) && 
+				!grid.hasBox(desiredPos + Vector3.up)){
+			return desiredPos + Vector3.up;
+		}
+		
+		return pos;
+	}
+
+	function move( dir: Dir, grid: Grid ):boolean
 	{
-		Debug.LogError(pos.ToString());
+		if (isMoving) return false;
+		
+		var target:Vector3 = motionTarget(dir, grid);
+		var mustClimb:boolean = target.y > pos.y;
+//		if (target == pos){
+//			Debug.LogError("Character unable to move");
+//		}else if (target.y > pos.y){
+//			Debug.Log("character must climb");
+//		}else{
+//			Debug.Log("character need not climb");
+//		}
+//		return;
+		isMoving = true;
+		Debug.Log("target="+target.ToString());
 		var frames: int = 50;
 		if (this.dir != dir){
 			this.dir = dir;
@@ -26,7 +69,7 @@ class Character extends System.Object
 			switch (dir){
 			case Dir.UP:
 				finalR = 0;
-				break;
+					break;
 			case dir.DOWN:
 				finalR = 180;
 				break;
@@ -37,11 +80,10 @@ class Character extends System.Object
 				finalR = 90;				
 			}
 			
-			//ROtation stuffs needed here
+			//Rotation stuffs needed here
 			
 			return;
 		}
-		
 		var dPos:Vector3;
 		var fPos:Vector3;
 		var moveEachFrame: float = 1.0/frames;
@@ -73,7 +115,8 @@ class Character extends System.Object
 		}
 		Debug.LogError(pos.ToString());
 		//dyield WaitForSeconds(1);
+	isMoving = false;
+	return true;
 	}
-
 	
 };

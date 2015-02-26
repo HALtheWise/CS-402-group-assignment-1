@@ -38,27 +38,32 @@ function Start () {
 function getControlKey(){
 	var wait:float = 1;
 	
-	if (Input.GetKey(KeyCode.UpArrow)){
+	if (Input.GetKeyDown (KeyCode.UpArrow)){
 		processing = true;
 		character.move(Dir.UP, grid);
 		processing = false;
 	}
-	else if (Input.GetKey (KeyCode.DownArrow)){
+	else if (Input.GetKeyDown (KeyCode.DownArrow)){
 		processing = true;
 		character.move(Dir.DOWN, grid);
 		processing = false;	
 	}
-	else if (Input.GetKey (KeyCode.LeftArrow)){
+	else if (Input.GetKeyDown (KeyCode.LeftArrow)){
 		processing = true;
 		character.move(Dir.LEFT, grid);
 		processing = false;
 	}
-	else if (Input.GetKey (KeyCode.RightArrow)){
+	else if (Input.GetKeyDown (KeyCode.RightArrow)){
 		processing = true;
 		character.move(Dir.RIGHT, grid);
 		processing = false;
 	}
 	
+	if (Input.GetKeyDown('t')){
+		for (var i = 0; i < 10; i++){
+			Debug.Log("(" + i + ",0,1)="+grid.getSpaceBox(Vector3(i, 0, 1)).ToString());
+		}
+	}
 	
 }
 function Update () {

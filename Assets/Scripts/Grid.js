@@ -14,7 +14,17 @@ class Grid extends System.Object{
 	}
 	
 	function getSpaceBox(pos:Vector3){
-		return grid[pos.x,pos.y,pos.z];
+		return grid[Mathf.RoundToInt(pos.x), Mathf.RoundToInt(pos.y), Mathf.RoundToInt(pos.z)];
+	}
+	
+	function hasBox(pos:Vector3):boolean{
+		if (pos.x < 0 || pos.y < 0 || pos.z < 0) return true; //TODO: also check for upper bounds of arrays
+		var box = getSpaceBox(pos);
+		if (!box) return false;
+		if (box.GetType() == typeof (Block)){
+			return true;
+		}
+		return false;
 	}
 	
 	function CreateBlock(pos: Vector3){
