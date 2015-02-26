@@ -40,22 +40,22 @@ function getControlKey(){
 	
 	if (Input.GetKeyDown (KeyCode.UpArrow)){
 		processing = true;
-		character.move(Dir.UP, grid);
+		StartCoroutine(character.move(Dir.UP, grid));
 		processing = false;
 	}
 	else if (Input.GetKeyDown (KeyCode.DownArrow)){
 		processing = true;
-		character.move(Dir.DOWN, grid);
+		StartCoroutine(character.move(Dir.DOWN, grid));
 		processing = false;	
 	}
 	else if (Input.GetKeyDown (KeyCode.LeftArrow)){
 		processing = true;
-		character.move(Dir.LEFT, grid);
+		StartCoroutine(character.move(Dir.LEFT, grid));
 		processing = false;
 	}
 	else if (Input.GetKeyDown (KeyCode.RightArrow)){
 		processing = true;
-		character.move(Dir.RIGHT, grid);
+		StartCoroutine(character.move(Dir.RIGHT, grid));
 		processing = false;
 	}
 	

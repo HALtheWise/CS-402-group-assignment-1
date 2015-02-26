@@ -34,27 +34,38 @@ class Character extends System.Object
 				desiredPos += Vector3.right;				
 			}
 		
-		if (!grid.hasBox(desiredPos)){
-			return desiredPos;
+		if (!grid.hasBox(desiredPos) && grid.hasBox(desiredPos + Vector3.down)){
+			return desiredPos; //Do not step up or down
 		}
 		
 		if (grid.hasBox(desiredPos) && !grid.hasBox(pos + Vector3.up) && 
 				!grid.hasBox(desiredPos + Vector3.up)){
-			return desiredPos + Vector3.up;
+			return desiredPos + Vector3.up; //Step up
+		}
+		
+		if (!grid.hasBox(desiredPos) && !grid.hasBox(desiredPos + Vector3.down) && 
+				grid.hasBox(desiredPos + Vector3.down + Vector3.down)){
+			return desiredPos + Vector3.down; //Step down
 		}
 		
 		return pos;
 	}
 
-	function move( dir: Dir, grid: Grid ):boolean
+	function move( dir: Dir, grid: Grid )
 	{
-		if (isMoving) return false;
+		if (isMoving) {
+			Debug.LogError("isMoving was true");
+			return;
+		}
+		Debug.Log("stuff");
 		
 		var target:Vector3 = motionTarget(dir, grid);
 		var mustClimb:boolean = target.y > pos.y;
-//		if (target == pos){
-//			Debug.LogError("Character unable to move");
-//		}else if (target.y > pos.y){
+		if (target == pos){
+			Debug.LogError("Character unable to move");
+			return;
+		}
+//		else if (target.y > pos.y){
 //			Debug.Log("character must climb");
 //		}else{
 //			Debug.Log("character need not climb");
@@ -62,7 +73,8 @@ class Character extends System.Object
 //		return;
 		isMoving = true;
 		Debug.Log("target="+target.ToString());
-		var frames: int = 50;
+		var frames: int = 10;
+		if (target.y != pos.y) frames *= 3; //Climbing is slower
 		if (this.dir != dir){
 			this.dir = dir;
 			var finalR: float;
@@ -82,41 +94,18 @@ class Character extends System.Object
 			
 			//Rotation stuffs needed here
 			
-			return;
+			//return;
 		}
-		var dPos:Vector3;
-		var fPos:Vector3;
-		var moveEachFrame: float = 1.0/frames;
-		switch (dir){
-		case Dir.UP:
-			dPos = Vector3(0,0,moveEachFrame);
-			fPos = Vector3(pos.x,pos.y,pos.z+1);
-			break;
-		case Dir.DOWN:
-			Debug.LogError("Down!");
-			dPos = Vector3(0,0,-moveEachFrame);
-			fPos = Vector3(pos.x,pos.y,pos.z-1);
-			break;
-		case Dir.LEFT:
-			dPos = Vector3(-moveEachFrame,0,0);
-			fPos = Vector3(pos.x-1,pos.y,pos.z);
-			break;
-		default:
-			dPos = Vector3(moveEachFrame, 0,0);
-			fPos = Vector3(pos.x+1,pos.y,pos.z);
-		}
-		Debug.LogError(pos.ToString());
+		var startPos:Vector3 = pos;
+		var endPos:Vector3 = target;
 		for (var i:int=0;i<frames;i++){
-			pos = Vector3(pos.x + dPos.x,
-						pos.y + dPos.y,
-						pos.z + dPos.z);
-			prefab.transform.position = pos;
-			//yield WaitForSeconds(.01);
+			prefab.transform.position = Vector3.Slerp(startPos, endPos, (i+1.0)/frames);
+			yield;
 		}
-		Debug.LogError(pos.ToString());
+		pos = endPos;
 		//dyield WaitForSeconds(1);
-	isMoving = false;
-	return true;
+		isMoving = false;
+		return;
 	}
 	
 };
